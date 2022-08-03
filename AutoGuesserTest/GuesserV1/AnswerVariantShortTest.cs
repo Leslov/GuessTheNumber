@@ -1,4 +1,6 @@
 using AutoGuesser;
+using NumberGameCore.BaseStuff;
+using NumberGameCore.BaseStuff.Holders;
 using NUnit.Framework;
 
 namespace AutoGuesserTest
@@ -9,9 +11,9 @@ namespace AutoGuesserTest
 		public void AnswerVariantShortTestConstructor()
 		{
 			int[] expected = new[]{ 1, 2, 3, 4 };
-			AnswerVariant foo = new AnswerVariant(expected);
+			Guess foo = SomeGuessHolder.GetByGuessed(expected);
 
-			int[] actual = foo.GetFullNumber();
+			int[] actual = foo.Guessed;
 			Assert.AreEqual(expected, actual);
 		}
 
@@ -23,7 +25,7 @@ namespace AutoGuesserTest
 			int n3 = 3;
 			int n4 = 4;
 
-			AnswerVariant foo = new AnswerVariant(n1, n2, n3, n4);
+			Guess foo = SomeGuessHolder.GetByGuessed(n1, n2, n3, n4);
 
 			int actual_n1 = foo.GetDigit(0);
 			int actual_n2 = foo.GetDigit(1);

@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Extras\Extras.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -1,8 +1,11 @@
-﻿namespace NumberGameCore
+﻿using NumberGameCore.BaseStuff;
+using NumberGameCore.BaseStuff.Holders;
+
+namespace NumberGameCore
 {
 	public class NumberGame
 	{
-		private int[] theNumbers;
+		private Guess answer;
 		private readonly NumberGameSettings settings;
 		public int GuessCount { get; private set; }
 		public bool IsWon { get; private set; }
@@ -16,42 +19,22 @@
 
 		private void NewGame()
 		{
-			Random ran = new Random(Guid.NewGuid().GetHashCode());
-			theNumbers = Enumerable.Range(0, 9).OrderBy(x => ran.Next()).Take(4).ToArray();
+			answer = SomeGuessHolder.GetRandom();
 			GuessCount = 0;
 		}
 
-		public int[] GetAnswer() => theNumbers;
+		public Guess GetAnswer() => answer;
 
-		public GuessResult Guess(int[] guessed)
+		public GuessResult Guess(Guess guessed)
 		{
-			if (guessed.Distinct().Count() != guessed.Length)
-				throw new Exception("Allowed only unique values");
 			if (IsLose)
 				throw new Exception("You lose! And you can't do more guesses");
-			var guessResult = DoFooGuess(guessed, theNumbers);
+
+			var guessResult = answer.GetMatches(guessed);
 			GuessCount++;
 			IsWon = guessResult.exactCount == settings.NumberCount;
 			IsLose = !IsWon && GuessCount >= settings.MaxAttempts;
 			return guessResult;
-		}
-
-		public static GuessResult DoFooGuess(int[] guessed, int[] answer)
-		{
-			byte exactCount = 0;
-			byte nonExactCount = 0;
-			for (int i = 0; i < answer.Length; i++)
-			{
-				var currentGuessed = guessed[i];
-				if (answer.Contains(currentGuessed))
-				{
-					if (answer[i] == currentGuessed)
-						exactCount++;
-					else
-						nonExactCount++;
-				}
-			}
-			return new GuessResult(exactCount, nonExactCount);
 		}
 	}
 }

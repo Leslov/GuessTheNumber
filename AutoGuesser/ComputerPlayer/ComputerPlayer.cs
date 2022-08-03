@@ -1,7 +1,7 @@
-﻿
-using AutoGuesser.Guessing;
+﻿using AutoGuesser.Guessing;
 using Extras.Extensions;
 using NumberGameCore;
+using NumberGameCore.BaseStuff;
 
 namespace AutoGuesser
 {
@@ -15,12 +15,13 @@ namespace AutoGuesser
 			this.game = game;
 		}
 
-		public MoveResult NextMove()
+		public FullGuess NextMove()
 		{
-			int[] guessed = guesser.GetNext();
+			Guess guessed = guesser.GetNext();
 			var result = game.Guess(guessed);
-			guesser.ApplyGuessResult(guessed, result);
-			return new MoveResult(guessed, result);
+			var fullGuess = new FullGuess(guessed, result);
+			guesser.ApplyGuessResult(fullGuess);
+			return fullGuess;
 		}
 	}
 }

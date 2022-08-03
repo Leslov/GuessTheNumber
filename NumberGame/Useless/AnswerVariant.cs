@@ -1,4 +1,4 @@
-﻿namespace NumberGameCore
+﻿namespace NumberGameCore.IMPIDOR
 {
 	public class AnswerVariantVPNDRS
 	{
@@ -31,31 +31,6 @@
 		{
 			if (obj is AnswerVariantVPNDRS obj2)
 				return obj2.GetAnswer() == this.GetAnswer();
-			else
-				return false;
-		}
-	}
-	public class AnswerVariant
-	{
-		private int digitsCount;
-		private int[] numbers;
-		public AnswerVariant(params int[] numbers)
-		{
-			this.digitsCount = numbers.Length;
-			this.numbers = numbers;
-		}
-		public int DigitsCount => digitsCount;
-		public int GetDigit(int index) => numbers[index];
-		public int[] GetFullNumber() => numbers;
-		public override string ToString()
-		{
-			return $"{string.Join("", GetFullNumber())}";
-		}
-
-		public override bool Equals(object? obj)
-		{
-			if (obj is AnswerVariant obj2)
-				return obj2.GetFullNumber().SequenceEqual(this.GetFullNumber());
 			else
 				return false;
 		}

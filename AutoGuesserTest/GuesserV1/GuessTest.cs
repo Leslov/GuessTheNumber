@@ -2,22 +2,14 @@
 using AutoGuesser;
 using AutoGuesser.Guessing;
 using NumberGameCore;
+using NumberGameCore.BaseStuff;
+using NumberGameCore.BaseStuff.Holders;
 using NUnit.Framework;
 
 namespace AutoGuesserTest.GuesserV1
 {
 	public class GuessTest
 	{
-		/*private GuessResult guessResult { get; }
-		//private int[] guessed { get; } = new[] {0, 1, 2, 3};
-
-		//private Guess guess;
-		[SetUp]
-		public void SetUp()
-		{
-			guess = new Guess(guessed, guessResult);
-		}*/
-
 		[TestCase(new int[] { 9, 8, 7, 6 }, 4, 0, new int[] { 9, 8, 7, 6 }, true)]
 		[TestCase(new int[] { 9, 8, 7, 6 }, 4, 0, new int[] { 9, 8, 7, 5 }, false)]
 		[TestCase(new int[] { 9, 8, 7, 6 }, 2, 0, new int[] { 9, 8, 5, 0 }, true)]
@@ -28,14 +20,15 @@ namespace AutoGuesserTest.GuesserV1
 		[TestCase(new int[] { 9, 8, 7, 6 }, 0, 2, new int[] { 8, 9, 7, 6 }, false)]
 		[TestCase(new int[] { 9, 8, 7, 6 }, 0, 0, new int[] { 0, 1, 2, 3 }, true)]
 		[TestCase(new int[] { 9, 8, 7, 6 }, 0, 0, new int[] { 6, 1, 2, 3 }, false)]
-		public void IsMatchesTest(int[] previousGuess, int exacts, int nonExacts, int[] newGuess, bool expected)
+		public void IsMatchesTest(int[] previousGuessed, byte exacts, byte nonExacts, int[] newGuessed, bool expected)
 		{
 			//Arrange
-			Guess guess = new Guess(previousGuess, new GuessResult(exacts, nonExacts));
-			var answerVariant = new AnswerVariant(newGuess);
+			Guess previousGuess = SomeGuessHolder.GetByGuessed(previousGuessed);
+			FullGuess previousFullGuess = new FullGuess(previousGuess, new GuessResult(exacts, nonExacts));
+			var newGuess = SomeGuessHolder.GetByGuessed(newGuessed);
 
 			//Act
-			bool actual = guess.IsMatches(answerVariant);
+			bool actual = previousFullGuess.IsMatches(newGuess);
 
 			//Assert
 			Assert.AreEqual(expected, actual);

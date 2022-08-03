@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoGuesser.Guessing;
 using NumberGameCore;
+using NumberGameCore.BaseStuff;
 
 namespace AutoGuesser.TurnPlanner
 {
@@ -13,14 +14,13 @@ namespace AutoGuesser.TurnPlanner
 		protected const int NumbersCount = 4;
 		private bool isPlanningInProgress = false;
 		private IAsyncResult proposeAsyncResult;
-		protected ProposedGuess? proposedGuess { get; set; }
+		protected ProposedGuess? proposedGuess { get; private set; }
 
-		protected abstract Task<ProposedGuess> GuessNext(CancellationToken token, Guess[] guessHistory,
-			AnswerVariant[] answerVariants);
-		public async Task StartPlanning(Guess[] guessHistory, AnswerVariant[] answerVariants)
+		public async Task StartPlanning(FullGuess[] guessHistory, Guess[] answerVariants)
 		{
 			if (!isPlanningInProgress)
 			{
+				planningTokenSource.TryReset();
 				isPlanningInProgress = true;
 				proposedGuess = await GuessNext(planningTokenSource.Token, guessHistory, answerVariants);
 				/*var proposeGuess = GuessNext;
@@ -30,6 +30,8 @@ namespace AutoGuesser.TurnPlanner
 				isPlanningInProgress = false;
 			}
 		}
+		protected abstract Task<ProposedGuess> GuessNext(CancellationToken token, FullGuess[] guessHistory,
+			Guess[] answerVariants);
 
 		/*private void OnPlanningCompleted(IAsyncResult resObj)
 		{
@@ -48,9 +50,9 @@ namespace AutoGuesser.TurnPlanner
 		protected static GuessResult[] GeneratePossibleGuessResults(int numbersCount)
 		{
 			List<GuessResult> guessResults = new List<GuessResult>();
-			for (int exacts = 0; exacts <= numbersCount; exacts++)
+			for (byte exacts = 0; exacts <= numbersCount; exacts++)
 			{
-				for (int nonExacts = 0; nonExacts <= numbersCount - exacts; nonExacts++)
+				for (byte nonExacts = 0; nonExacts <= numbersCount - exacts; nonExacts++)
 				{
 					guessResults.Add(new GuessResult(exacts, nonExacts));
 				}

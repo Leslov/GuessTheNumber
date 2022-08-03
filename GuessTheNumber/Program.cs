@@ -1,6 +1,8 @@
 ﻿using AutoGuesser;
 using AutoGuesser.Guessing;
 using NumberGameCore;
+using NumberGameCore.BaseStuff;
+using NumberGameCore.BaseStuff.Holders;
 
 Console.WriteLine("Guess the number!");
 var settings = new NumberGameSettings(4, 12);
@@ -33,7 +35,7 @@ void LetComputerPlay()
 	var guesser = new ComputerPlayer(game, new ConsoleWriter());
 	while (!game.IsEnded)
 	{
-		MoveResult moveResult = guesser.NextMove();
+		FullGuess moveResult = guesser.NextMove();
 		Console.WriteLine(moveResult.GetReadableResult());
 	}
 }
@@ -44,7 +46,8 @@ void PlayYourself()
 	{
 		Console.Write($"{game.GuessCount + 1}: ");
 		int[] guessed = Console.ReadLine().Select(x => int.Parse(x.ToString())).ToArray();
-		var result = game.Guess(guessed);
+		Guess guess = SomeGuessHolder.GetByGuessed(guessed);
+		var result = game.Guess(guess);
 		Console.WriteLine(result);
 	}
 	if (game.IsLose)
@@ -72,8 +75,9 @@ void PlayWithComputerHelp()
 			{
 				writer.WriteLine($"{game.GuessCount + 1}: {userInput}");
 				int[] guessed = userInput.Select(x => int.Parse(x.ToString())).ToArray();
-				var result = game.Guess(guessed);
-				guesser.ApplyGuessResult(guessed, result);
+				Guess guess = SomeGuessHolder.GetByGuessed(guessed);
+				var result = game.Guess(guess);
+				guesser.ApplyGuessResult(new FullGuess(guess,result));
 				writer.WriteLine(result.ToString());
 			}
 		}

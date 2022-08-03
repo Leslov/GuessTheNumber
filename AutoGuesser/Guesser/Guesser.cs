@@ -7,18 +7,20 @@ using AutoGuesser.Something_Useful;
 using AutoGuesser.TurnPlanner;
 using Extras.Extensions;
 using NumberGameCore;
+using NumberGameCore.BaseStuff;
+using NumberGameCore.BaseStuff.Holders;
 
 namespace AutoGuesser.Guessing
 {
 	public class Guesser : IUserInputProcessor
 	{
-		protected readonly List<Guess> guessHistory = new();
-		protected AnswerVariant[] answerVariants { get; private set; }
+		protected readonly List<FullGuess> guessHistory = new();
+		protected Guess[] answerVariants { get; private set; }
 		protected readonly IOutputWriter outputWriter;
 
 		public Guesser(IOutputWriter outputWriter)
 		{
-			answerVariants = GenerateAnswerVariants();
+			answerVariants = SomeGuessHolder.GetAllGuesses();
 			this.outputWriter = outputWriter;
 		}
 
@@ -52,52 +54,28 @@ namespace AutoGuesser.Guessing
 		protected void OnIsPossibleInvoke(string args)
 		{
 			int[] guessed = args.Select(x => (int)x).ToArray();
-			bool isPossible = answerVariants.Any(x => guessed.SequenceEqual(x.GetFullNumber()));//TODO: Можно изи оптимизировать
+			Guess guess = SomeGuessHolder.GetByGuessed(guessed);
+			bool isPossible = answerVariants.Contains(guess);
 			string possibleString = isPossible ? "Possible" : "Impossible!";
 			outputWriter.WriteLine($"The answer {args} is {possibleString}");
 		}
 
 		#endregion
+		
 
-		public static AnswerVariant[] GenerateAnswerVariants()
-		{
-			var variants = new List<AnswerVariant>();
-			for (int a = 0; a < 10; a++)
-			{
-				for (int b = 0; b < 10; b++)
-				{
-					if (b == a)
-						continue;
-					for (int c = 0; c < 10; c++)
-					{
-						if (c == a || c == b)
-							continue;
-						for (int d = 0; d < 10; d++)
-						{
-							if (d == a || d == b || d == c)
-								continue;
-							variants.Add(new AnswerVariant(a, b, c, d));
-						}
-					}
-				}
-			}
-			return variants.ToArray();
-		}
-
-		public int[] GetNext()
+		public Guess GetNext()
 		{
 			if (!guessHistory.Any())
-				return answerVariants.Random().GetFullNumber();//new byte[] { 0, 1, 2, 3 };
+				return answerVariants.Random();//new byte[] { 0, 1, 2, 3 };
 			throw new NotImplementedException();
 		}
 
-		public void ApplyGuessResult(int[] guessed, GuessResult guessResult)
+		public void ApplyGuessResult(FullGuess guessed)
 		{
-			
 			nextTurnPlanner.StopPlanningNextTurn();
-			guessHistory.Add(new Guess(guessed, guessResult));
+			guessHistory.Add(guessed);
 			var guessValue = FilterPossibleAnswers();
-			outputWriter.WriteLine($"Guess value = {guessValue}");
+			outputWriter.WriteLine($"FullGuess value = {guessValue}");
 			nextTurnPlanner.StartPlanning(guessHistory.ToArray(), answerVariants);
 			if (ShowChancesTableAfterEachTurn)
 				outputWriter.WriteLine(GetReadableChanceTable());
@@ -149,7 +127,7 @@ namespace AutoGuesser.Guessing
 			return previousCount - answerVariants.Length;
 		}
 
-		public static AnswerVariant[] GetFilteredAnswers(AnswerVariant[] answerVariants, IEnumerable<Guess> guessHistory, params Guess[] nextGuesses)
+		public static Guess[] GetFilteredAnswers(Guess[] answerVariants, IEnumerable<FullGuess> guessHistory, params FullGuess[] nextGuesses)
 		{
 			return answerVariants.Where(answer =>
 				guessHistory.All(guess => guess.IsMatches(answer))

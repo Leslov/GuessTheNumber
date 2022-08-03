@@ -1,11 +1,11 @@
-﻿namespace NumberGameCore;
+﻿namespace NumberGameCore.BaseStuff;
 
 public struct GuessResult : IEquatable<GuessResult>
 {
-	public readonly int exactCount;
-	public readonly int nonExactCount;
+	public byte exactCount { get; }
+	public byte nonExactCount { get; }
 
-	public GuessResult(int exactCount, int nonExactCount)
+	public GuessResult(byte exactCount, byte nonExactCount)
 	{
 		this.exactCount = exactCount;
 		this.nonExactCount = nonExactCount;
