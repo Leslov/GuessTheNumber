@@ -13,15 +13,15 @@ public class ProposedGuess
 		this.Guess = guesses.First().FullGuess.GetGuess();
 	}
 
-	public int LowestValue => guesses.Select(x => x.Value).Min();
-	public int HighestValue => guesses.Select(x => x.Value).Max();
+	public double LowestValue => guesses.Select(x => x.Value).Min();
+	public double HighestValue => guesses.Select(x => x.Value).Max();
 	public double AverageValue => guesses.Select(x => x.Value).Average();
 }
 
 public class EvaluatedFullGuess
 {
 	public FullGuess FullGuess { get; }
-	public int Value { get; set; }
+	public double Value { get; set; }
 
 	internal EvaluatedFullGuess(FullGuess fullGuess, int value)
 	{

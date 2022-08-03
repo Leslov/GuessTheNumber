@@ -61,25 +61,27 @@ namespace AutoGuesser.Guessing
 		}
 
 		#endregion
-		
+
 
 		public Guess GetNext()
 		{
 			if (!guessHistory.Any())
 				return answerVariants.Random();//new byte[] { 0, 1, 2, 3 };
-			throw new NotImplementedException();
+			ProposedGuess propGuess = nextTurnPlanner.GuessNext(guessHistory.ToArray(), answerVariants);
+			return propGuess.Guess;
 		}
 
 		public void ApplyGuessResult(FullGuess guessed)
 		{
 			nextTurnPlanner.StopPlanningNextTurn();
 			guessHistory.Add(guessed);
-			var guessValue = FilterPossibleAnswers();
+			int guessValue = FilterPossibleAnswers();
 			outputWriter.WriteLine($"FullGuess value = {guessValue}");
-			nextTurnPlanner.StartPlanning(guessHistory.ToArray(), answerVariants);
+
 			if (ShowChancesTableAfterEachTurn)
 				outputWriter.WriteLine(GetReadableChanceTable());
 		}
+		public void StartPlanning() => nextTurnPlanner.StartPlanning(guessHistory.ToArray(), answerVariants);
 
 		public decimal[][] GenerateChanceTable()
 		{

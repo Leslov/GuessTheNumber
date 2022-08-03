@@ -27,7 +27,7 @@ namespace NumberGameCore.BaseStuff
 				var currentGuessed = guessed.Guessed[i];
 				if (answer[i] == currentGuessed)
 					exactCount++;
-				else if (answer.Contains(currentGuessed))
+				else if (answer.Contains(currentGuessed))//TODO: Slowest!
 					nonExactCount++;
 			}
 			return new GuessResult(exactCount, nonExactCount);

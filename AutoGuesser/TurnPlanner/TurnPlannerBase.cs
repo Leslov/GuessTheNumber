@@ -30,6 +30,9 @@ namespace AutoGuesser.TurnPlanner
 				isPlanningInProgress = false;
 			}
 		}
+
+		public ProposedGuess GuessNext(FullGuess[] guessHistory, Guess[] answerVariants) =>
+			GuessNext(new CancellationToken(false), guessHistory, answerVariants).Result;
 		protected abstract Task<ProposedGuess> GuessNext(CancellationToken token, FullGuess[] guessHistory,
 			Guess[] answerVariants);
 

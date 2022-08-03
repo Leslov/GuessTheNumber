@@ -14,8 +14,10 @@ public class PlannerV1 : TurnPlannerBase
 		Guess[] allAnswers = SomeGuessHolder.GetAllGuesses().Except(previousGuesses).ToArray();
 		EvaluatedFullGuess[] possibleEvaluatedFullGuesses =
 			allAnswers.SelectMany(guessed => GetPossibleGuesses(allAnswers, guessHistory, guessed)).ToArray();
-
-		int initialAnswersCount = answerVariants.Length;
+		//66.6 seconds - single core
+		int initialAnswersCount = answerVariants.Length;//TODO: Способ оптимизровать:
+		/// 1) СОхранять результаты
+		/// 2) Сделать вычисление многопоточным
 
 
 
@@ -26,20 +28,24 @@ public class PlannerV1 : TurnPlannerBase
 			int answersCount = GetPossibleAnswers(allAnswers, guessHistory, guess).Count();
 			guess.Value = initialAnswersCount - answersCount;
 		}*/
+		bool isPossibleAnswer(EvaluatedFullGuess efg) => answerVariants.Contains(efg.FullGuess.GetGuess());
+		double getPossibilityValue(EvaluatedFullGuess efg) => isPossibleAnswer(efg) ? 10 / (double) answerVariants.Length : 0;
 
-		var tasks = possibleEvaluatedFullGuesses.Select(async guess =>
+		var tasks = possibleEvaluatedFullGuesses.Select(async efg =>
 		{
-			int answersCount = await Task.Run(() => GetPossibleAnswers(allAnswers, guessHistory, guess.FullGuess).Count(), token);
-			guess.Value = initialAnswersCount - answersCount;
-		});
+			int answersCount = await Task.Run(() => GetPossibleAnswers(allAnswers, guessHistory, efg.FullGuess).Count(), token);
+			efg.Value = (initialAnswersCount - answersCount) + getPossibilityValue(efg);
+		});//TODO: Оценка не совсем корректная. Не учитывается вероятность гессрезалта
 		await Task.WhenAll(tasks);
-
+		//25 seconds - all cores
 
 
 		var proposedGuesses = possibleEvaluatedFullGuesses.GroupBy(x => x.FullGuess.GetGuess())
 			.Select(x => new ProposedGuess(x.ToArray()))
-			.OrderBy(x => x.AverageValue)
+			.OrderByDescending(x => x.AverageValue)
 			.ToArray();
+		var foo = proposedGuesses.Where(x => x.Guess.Id
+		                                     == SomeGuessHolder.GetByGuessed(9, 2, 1, 7).Id);
 		return proposedGuesses.First();
 	}
 
