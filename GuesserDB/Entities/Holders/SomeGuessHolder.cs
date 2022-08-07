@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Extras.Extensions;
 
-namespace NumberGameCore.BaseStuff.Holders
+namespace GuesserDB.Entities.Holders
 {
 	public class SomeGuessHolder
 	{
@@ -30,17 +30,17 @@ namespace NumberGameCore.BaseStuff.Holders
 			var ezNavGuesses = new Guess[10, 10, 10, 10];
 			var ordinaryGuesses = new Guess[5040];
 			short index = 0;
-			for (int a = 0; a < 10; a++)
+			for (byte a = 0; a < 10; a++)
 			{
-				for (int b = 0; b < 10; b++)
+				for (byte b = 0; b < 10; b++)
 				{
 					if (b == a)
 						continue;
-					for (int c = 0; c < 10; c++)
+					for (byte c = 0; c < 10; c++)
 					{
 						if (c == a || c == b)
 							continue;
-						for (int d = 0; d < 10; d++)
+						for (byte d = 0; d < 10; d++)
 						{
 							if (d == a || d == b || d == c)
 								continue;
@@ -71,7 +71,7 @@ namespace NumberGameCore.BaseStuff.Holders
 
 		public static short GetGuessId(Guess guess)
 		{
-			int[] g = guess.Guessed;
+			byte[] g = guess.Guessed;
 			return lazyGuessesEzNav.Value[g[0], g[1], g[2], g[3]].Id;
 		}
 

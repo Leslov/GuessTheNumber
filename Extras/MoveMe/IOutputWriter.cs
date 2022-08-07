@@ -1,4 +1,4 @@
-﻿namespace AutoGuesser.Guessing;
+﻿namespace Extras;
 
 public interface IOutputWriter
 {

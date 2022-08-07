@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AutoGuesser.Something_Useful
+namespace Extras.Something_Useful
 {
 	public class GuessChances
 	{

@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoGuesser.Guessing;
+using GuesserDB.Entities;
 using NumberGameCore;
-using NumberGameCore.BaseStuff;
 
 namespace AutoGuesser.TurnPlanner
 {

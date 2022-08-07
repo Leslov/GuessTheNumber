@@ -1,9 +1,9 @@
 ﻿using System.Drawing;
 using AutoGuesser;
 using AutoGuesser.Guessing;
+using GuesserDB.Entities;
+using GuesserDB.Entities.Holders;
 using NumberGameCore;
-using NumberGameCore.BaseStuff;
-using NumberGameCore.BaseStuff.Holders;
 using NUnit.Framework;
 
 namespace AutoGuesserTest.GuesserV1

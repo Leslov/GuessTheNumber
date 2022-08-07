@@ -1,4 +1,4 @@
-﻿using NumberGameCore.BaseStuff;
+﻿using GuesserDB.Entities;
 
 namespace AutoGuesser.Guessing;
 

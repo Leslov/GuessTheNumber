@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AutoGuesser.Something_Useful;
 using AutoGuesser.TurnPlanner;
+using Extras;
 using Extras.Extensions;
+using Extras.Something_Useful;
+using GuesserDB.Entities;
+using GuesserDB.Entities.Holders;
 using NumberGameCore;
-using NumberGameCore.BaseStuff;
-using NumberGameCore.BaseStuff.Holders;
 
 namespace AutoGuesser.Guessing
 {
@@ -33,11 +34,11 @@ namespace AutoGuesser.Guessing
 		{
 			return new MyCommand[]
 			{
-				new MyCommand("info",
+				new("info",
 					"Показать таблицу шансов. Параметр 0 или 1 - выключить/включить отображение после каждого хода",
 					OnInfoInvoke),
-				new MyCommand("help", "Запросить оптимальный ход", (s) => GetNext()),
-				new MyCommand("is_possible", "Является ли ход возможным решением. Пример вызова: 'is_possible 1234'",
+				new("help", "Запросить оптимальный ход", (s) => GetNext()),
+				new("is_possible", "Является ли ход возможным решением. Пример вызова: 'is_possible 1234'",
 					OnIsPossibleInvoke)
 			};
 		}
@@ -88,12 +89,12 @@ namespace AutoGuesser.Guessing
 			int columnsCount = 4;
 			int rowsCount = 10;
 			decimal[][] table = new decimal[rowsCount][];
-			for (int rowId = 0; rowId < rowsCount; rowId++)
+			for (byte rowId = 0; rowId < rowsCount; rowId++)
 			{
 				table[rowId] = new decimal[columnsCount + 1];
-				for (int columnId = 0; columnId < columnsCount; columnId++)
+				for (byte columnId = 0; columnId < columnsCount; columnId++)
 				{
-					int[] digits = answerVariants.Select(x => x.GetDigit(columnId)).ToArray();
+					byte[] digits = answerVariants.Select(x => x.GetDigit(columnId)).ToArray();
 					decimal exactsCount = (decimal)digits.Count(x => x == rowId);
 					table[rowId][columnId] = exactsCount / digits.Length;
 				}

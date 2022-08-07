@@ -1,4 +1,4 @@
-﻿namespace AutoGuesser.Something_Useful;
+﻿namespace Extras.Something_Useful;
 
 public class MyCommand
 {

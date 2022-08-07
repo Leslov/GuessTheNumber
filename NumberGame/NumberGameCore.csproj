@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Extras\Extras.csproj" />
+    <ProjectReference Include="..\GuesserDB\GuesserDB.csproj" />
   </ItemGroup>
 
 </Project>

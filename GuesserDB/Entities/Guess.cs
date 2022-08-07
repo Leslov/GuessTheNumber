@@ -1,16 +1,15 @@
-﻿using NumberGameCore.BaseStuff.Holders;
-
-namespace NumberGameCore.BaseStuff
+﻿namespace GuesserDB.Entities
 {
-	public struct Guess
+	public class Guess
 	{
 		public short Id { get; }
-		public int[] Guessed { get; }
+		public byte[] Guessed { get; }
 
-		internal Guess(short id, params int[] guessed)
+		internal Guess(short id, params byte[] guessed)
 		{
 			Id = id;
 			this.Guessed = guessed;
+			//DigitsCount = (byte)Guessed.Length;
 		}
 
 		/// <summary>
@@ -18,13 +17,13 @@ namespace NumberGameCore.BaseStuff
 		/// </summary>
 		public GuessResult GetMatches(Guess guessed)
 		{
-			int[] answer = this.Guessed;
+			byte[] answer = this.Guessed;
 			int len = answer.Length;
 			byte exactCount = 0;
 			byte nonExactCount = 0;
-			for (int i = 0; i < len; i++)
+			for (byte i = 0; i < len; i++)
 			{
-				var currentGuessed = guessed.Guessed[i];
+				byte currentGuessed = guessed.GetDigit(i);
 				if (answer[i] == currentGuessed)
 					exactCount++;
 				else if (answer.Contains(currentGuessed))//TODO: Slowest!
@@ -32,13 +31,14 @@ namespace NumberGameCore.BaseStuff
 			}
 			return new GuessResult(exactCount, nonExactCount);
 		}
-		public int DigitsCount => Guessed.Length;
-		public int GetDigit(int index) => Guessed[index];
+		//public byte DigitsCount { get; }
+		public byte GetDigit(byte index) => Guessed[index];
 		public override string ToString()
 		{
 			return $"{string.Join("", Guessed)}";
 		}
-
+		public static bool operator ==(Guess obj1, Guess obj2) => obj1.Equals(obj2);
+		public static bool operator !=(Guess obj1, Guess obj2) => !obj1.Equals(obj2);
 		public override bool Equals(object? obj)
 		{
 			if (obj is Guess obj2)

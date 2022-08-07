@@ -1,5 +1,5 @@
-﻿using NumberGameCore.BaseStuff;
-using NumberGameCore.BaseStuff.Holders;
+﻿using GuesserDB.Entities;
+using GuesserDB.Entities.Holders;
 
 namespace NumberGameCore
 {

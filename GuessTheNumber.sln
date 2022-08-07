@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Extras", "Extras\Extras.csp
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{22C24F95-4B4B-4FD4-A2B2-8A152A8449D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoGuesserTest", "AutoGuesserTest\AutoGuesserTest.csproj", "{F54F5554-A686-4817-9A91-F96E3E8AA128}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoGuesserTest", "AutoGuesserTest\AutoGuesserTest.csproj", "{F54F5554-A686-4817-9A91-F96E3E8AA128}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GuesserDB", "GuesserDB\GuesserDB.csproj", "{2EAB9F80-9F75-4683-9616-62310B73C949}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +43,10 @@ Global
 		{F54F5554-A686-4817-9A91-F96E3E8AA128}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F54F5554-A686-4817-9A91-F96E3E8AA128}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F54F5554-A686-4817-9A91-F96E3E8AA128}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2EAB9F80-9F75-4683-9616-62310B73C949}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2EAB9F80-9F75-4683-9616-62310B73C949}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2EAB9F80-9F75-4683-9616-62310B73C949}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2EAB9F80-9F75-4683-9616-62310B73C949}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

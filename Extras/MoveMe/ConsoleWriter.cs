@@ -1,4 +1,4 @@
-﻿namespace AutoGuesser.Guessing;
+﻿namespace Extras;
 
 public class ConsoleWriter : IOutputWriter
 {
@@ -9,4 +9,6 @@ public class ConsoleWriter : IOutputWriter
 	public string ReadLine() => Console.ReadLine();
 
 	public void NewLine() => Console.WriteLine();
+
+	public void Clear() => Console.Clear();
 }

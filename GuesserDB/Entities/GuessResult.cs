@@ -1,14 +1,19 @@
-﻿namespace NumberGameCore.BaseStuff;
+﻿using Extras.Extensions;
 
-public struct GuessResult : IEquatable<GuessResult>
+namespace GuesserDB.Entities;
+
+public class GuessResult : IEquatable<GuessResult>
 {
 	public byte exactCount { get; }
 	public byte nonExactCount { get; }
+	public byte Id { get; }
 
 	public GuessResult(byte exactCount, byte nonExactCount)
 	{
 		this.exactCount = exactCount;
 		this.nonExactCount = nonExactCount;
+		var digitsCount = ConstSettings.DigitsCount;
+		this.Id = (byte)(nonExactCount + ((3 + digitsCount * 2) * exactCount - Math.Pow(exactCount, 2)) / 2);
 	}
 
 	public override string ToString()
@@ -33,4 +38,7 @@ public struct GuessResult : IEquatable<GuessResult>
 	{
 		return HashCode.Combine(exactCount, nonExactCount);
 	}
+
+	private static Lazy<byte> possibleCount = new(() => (byte)((int)ConstSettings.DigitsCount + 1).GetSummaRyada());
+	public static byte GetPossibleCount() => possibleCount.Value;
 }

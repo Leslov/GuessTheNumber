@@ -1,7 +1,9 @@
 ﻿using AutoGuesser.Guessing;
+using Extras;
 using Extras.Extensions;
+using GuesserDB.Entities;
+using GuesserDB.Entities.Holders;
 using NumberGameCore;
-using NumberGameCore.BaseStuff;
 
 namespace AutoGuesser
 {
@@ -19,7 +21,7 @@ namespace AutoGuesser
 		{
 			Guess guessed = guesser.GetNext();
 			var result = game.Guess(guessed);
-			var fullGuess = new FullGuess(guessed, result);
+			var fullGuess = SomeFullGuessHolder.GetFullGuess(guessed, result);
 			guesser.ApplyGuessResult(fullGuess);
 			return fullGuess;
 		}

@@ -1,8 +1,8 @@
 ﻿using System.Collections.Concurrent;
 using AutoGuesser.Guessing;
+using GuesserDB.Entities;
+using GuesserDB.Entities.Holders;
 using NumberGameCore;
-using NumberGameCore.BaseStuff;
-using NumberGameCore.BaseStuff.Holders;
 
 namespace AutoGuesser.TurnPlanner;
 

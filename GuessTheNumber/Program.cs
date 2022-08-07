@@ -1,32 +1,43 @@
 ﻿using AutoGuesser;
 using AutoGuesser.Guessing;
+using Extras;
+using GuesserDB;
+using GuesserDB.DBBase;
+using GuesserDB.Entities;
+using GuesserDB.Entities.Holders;
 using NumberGameCore;
-using NumberGameCore.BaseStuff;
-using NumberGameCore.BaseStuff.Holders;
 
 Console.WriteLine("Guess the number!");
 var settings = new NumberGameSettings(4, 12);
-Console.WriteLine("Hopelen Hopskops");
-Console.WriteLine("Choose a player:");
-Console.WriteLine("1) Lena (играет игрок)");
-Console.WriteLine("2) Pol (Играет комп)");
-Console.WriteLine("3) Dragon (Играет игрок с поддержкой компа)");
-var key = Console.ReadKey();
-Console.Clear();
-switch (key.Key)
+while (true)
 {
-	case ConsoleKey.D1:
-	case ConsoleKey.NumPad1:
-		PlayYourself();
-		break;
-	case ConsoleKey.D2:
-	case ConsoleKey.NumPad2:
-		LetComputerPlay();
-		break;
-	case ConsoleKey.D3:
-	case ConsoleKey.NumPad3:
-		PlayWithComputerHelp();
-		break;
+	Console.WriteLine("Hopelen Hopskops");
+	Console.WriteLine("Choose a player:");
+	Console.WriteLine("1) Lena (играет игрок)");
+	Console.WriteLine("2) Pol (Играет комп)");
+	Console.WriteLine("3) Dragon (Играет игрок с поддержкой компа)");
+	Console.WriteLine("4) Prepare stuff");
+	var key = Console.ReadKey();
+	Console.Clear();
+	switch (key.Key)
+	{
+		case ConsoleKey.D1:
+		case ConsoleKey.NumPad1:
+			PlayYourself();
+			break;
+		case ConsoleKey.D2:
+		case ConsoleKey.NumPad2:
+			LetComputerPlay();
+			break;
+		case ConsoleKey.D3:
+		case ConsoleKey.NumPad3:
+			PlayWithComputerHelp();
+			break;
+		case ConsoleKey.D4:
+		case ConsoleKey.NumPad4:
+			PrepareStuff();
+			break;
+	}
 }
 
 void LetComputerPlay()
@@ -77,7 +88,7 @@ void PlayWithComputerHelp()
 				int[] guessed = userInput.Select(x => int.Parse(x.ToString())).ToArray();
 				Guess guess = SomeGuessHolder.GetByGuessed(guessed);
 				var result = game.Guess(guess);
-				guesser.ApplyGuessResult(new FullGuess(guess,result));
+				guesser.ApplyGuessResult(new FullGuess(guess, result));
 				writer.WriteLine(result.ToString());
 			}
 		}
@@ -93,6 +104,13 @@ void PlayWithComputerHelp()
 		Console.WriteLine($"GZ, You won! Number is {string.Join("", game.GetAnswer())}");
 }
 
+void PrepareStuff()
+{
+	var writer = new ConsoleWriter();
+	DataPreparer dp = new DataPreparer();
+	var task = dp.FillAllData(writer);
+	task.Wait();
+}
 public class NumberGameInputProcessor
 {
 	private readonly IUserInputProcessor[] inputProcessors;
