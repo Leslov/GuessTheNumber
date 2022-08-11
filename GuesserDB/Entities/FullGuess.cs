@@ -32,10 +32,8 @@ public class FullGuess
 		GuessResult guessResultActual = answer.GetMatches(GetGuess());
 		return guessResultExpected == guessResultActual;
 	}
-	public bool IsMatches(Guess answer)
-	{
-		return SomeGuessMatchesHolder.IsMatches(this, answer);
-	}
+
+	public bool IsMatches(Guess answer) => SomeGuessMatchesHolder.IsMatches(this, answer);
 
 	public string GetReadableResult() => $"{string.Join("", GetGuess().Guessed)} - {GetGuessResult()}";
 }

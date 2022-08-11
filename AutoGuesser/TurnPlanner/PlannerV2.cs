@@ -7,47 +7,43 @@ using NumberGameCore;
 
 namespace AutoGuesser.TurnPlanner;
 
-public class PlannerV1 : TurnPlannerBase
+public class PlannerV2 : TurnPlannerBase
 {
+	/// <summary>
+	/// About 10.5 seconds
+	/// </summary>
 	protected override async Task<ProposedGuess> GuessNext(CancellationToken token, FullGuess[] guessHistory, Guess[] answerVariants)
 	{
-		ushort[] historyFGIds = guessHistory.Select(x => x.Id).ToArray();
-		Guess[] previousGuesses = guessHistory.Select(x => x.GetGuess()).ToArray();
-		Guess[] allAnswers = SomeGuessHolder.GetAllGuesses().Except(previousGuesses).ToArray();
-		EvaluatedFullGuess[] possibleEvaluatedFullGuesses =
-			allAnswers.SelectMany(guessed => GetPossibleGuesses(allAnswers, guessHistory, guessed)).ToArray();
-		//24 seconds - single core
 		int initialAnswersCount = answerVariants.Length;
-
-
-
-
-
 		bool isPossibleAnswer(EvaluatedFullGuess efg) => answerVariants.Contains(efg.FullGuess.GetGuess());
 		double getPossibilityValue(EvaluatedFullGuess efg) => isPossibleAnswer(efg) ? 10 / (double)initialAnswersCount : 0;
 
-		/*Parallel.ForEach(possibleEvaluatedFullGuesses, efg =>
+
+		ushort[] historyFGIds = guessHistory.Select(x => x.Id).ToArray();
+		Guess[] previousGuesses = guessHistory.Select(x => x.GetGuess()).ToArray();
+		Guess[] allAnswers = SomeGuessHolder.GetAllGuesses().Except(previousGuesses).ToArray();
+		var allAnswerIds = allAnswers.Select(x => x.Id).ToArray();
+		long count = allAnswers.Length;
+		ProposedGuess[] resultPGs = new ProposedGuess[count];
+		Parallel.For(0, count, (i, state) =>
 		{
-			int answersCount = GetPossibleAnswers(allAnswers, guessHistory, efg.FullGuess).Count();
-			efg.Value = (initialAnswersCount - answersCount) + getPossibilityValue(efg);
-		});//Медленно*/
+			var answer = allAnswers[i];
+			EvaluatedFullGuess[] possibleEvaluatedFullGuesses = GetPossibleGuesses(allAnswers, guessHistory, answer);
+			//58% cpu
+			foreach (var efg in possibleEvaluatedFullGuesses)
+			{
+				int answersCount = GetPossibleAnswersCount(allAnswerIds,
+					historyFGIds.Concat(new[] {efg.FullGuess.Id}).ToArray());
+				// 34% cpu
+				//double chance = 
+				efg.Value = (initialAnswersCount - answersCount + getPossibilityValue(efg)); //* chance;
+			}//TODO: Оценка не совсем корректная. Не учитывается вероятность гессрезалта
 
-		Parallel.ForEach(possibleEvaluatedFullGuesses, efg =>
-		{
-			int answersCount = GetPossibleAnswersCount(allAnswers.Select(x => x.Id).ToArray(),
-				historyFGIds.Concat(new[] { efg.FullGuess.Id }).ToArray());
-			//double chance = 
-			efg.Value = ((initialAnswersCount - answersCount) + getPossibilityValue(efg)); //* chance;
-		});//Оценка не совсем корректная. Не учитывается вероятность гессрезалта
-
-		//5.5 seconds - all cores
+			resultPGs[i] = new ProposedGuess(possibleEvaluatedFullGuesses);
+		});
 
 
-		var proposedGuesses = possibleEvaluatedFullGuesses.GroupBy(x => x.FullGuess.GetGuess())
-			.Select(x => new ProposedGuess(x.ToArray()))
-			.OrderByDescending(x => x.AverageValue)
-			.ToArray();
-		return proposedGuesses.First();
+		return resultPGs.MaxBy(x => x.AverageValue) ?? throw new Exception("Something went wrong!");
 	}
 
 	/// <summary>

@@ -133,8 +133,20 @@ namespace AutoGuesser.Guessing
 		public static Guess[] GetFilteredAnswers(Guess[] answerVariants, IEnumerable<FullGuess> guessHistory, params FullGuess[] nextGuesses)
 		{
 			return answerVariants.Where(answer =>
-				guessHistory.All(guess => guess.IsMatches(answer))
-				&& nextGuesses.All(guess => guess.IsMatches(answer))).ToArray();
+				nextGuesses.All(guess => guess.IsMatches(answer))
+				&& guessHistory.All(guess => guess.IsMatches(answer))).ToArray();
+		}
+		public static int GetFilteredAnswersCount(Guess[] answerVariants, IEnumerable<FullGuess> guessHistory, params FullGuess[] nextGuesses)
+		{
+			return answerVariants.Count(answer =>
+				nextGuesses.All(guess => guess.IsMatches(answer))
+				&& guessHistory.All(guess => guess.IsMatches(answer)));
+		}
+		public static bool AnyFilteredAnswer(Guess[] answerVariants, IEnumerable<FullGuess> guessHistory, params FullGuess[] nextGuesses)
+		{
+			return answerVariants.Any(answer =>
+				nextGuesses.All(guess => guess.IsMatches(answer))
+				&& guessHistory.All(guess => guess.IsMatches(answer)));
 		}
 
 		#region Next turn planning

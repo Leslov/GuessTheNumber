@@ -26,7 +26,7 @@
 				byte currentGuessed = guessed.GetDigit(i);
 				if (answer[i] == currentGuessed)
 					exactCount++;
-				else if (answer.Contains(currentGuessed))//TODO: Slowest!
+				else if (answer.Contains(currentGuessed))
 					nonExactCount++;
 			}
 			return new GuessResult(exactCount, nonExactCount);

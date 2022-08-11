@@ -19,6 +19,10 @@ namespace GuesserDB.DBBase
 		public IEntityRange<Guess> Guess { get; } = EntityRangeFactory.CreateSome<Guess>();
 		public IEntityRange<GuessResult> GuessResult { get; } = EntityRangeFactory.CreateSome<GuessResult>();
 		public IEntityRange<FullGuess> FullGuess { get; } = EntityRangeFactory.CreateSome<FullGuess>();
+
+		/// <summary>
+		/// [FullGuessId, GuessId]
+		/// </summary>
 		public bool[,] GuessMatches { get; set; }
 		
 		public void ClearAll()

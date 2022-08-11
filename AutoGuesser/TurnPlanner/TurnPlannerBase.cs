@@ -64,6 +64,6 @@ namespace AutoGuesser.TurnPlanner
 			return guessResults.ToArray();
 		}
 
-		public static TurnPlannerBase CreateV1Planner() => new PlannerV1();
+		public static TurnPlannerBase CreateV1Planner() => new PlannerV2();
 	}
 }
