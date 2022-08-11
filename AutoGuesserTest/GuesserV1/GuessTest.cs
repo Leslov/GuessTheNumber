@@ -24,12 +24,13 @@ namespace AutoGuesserTest.GuesserV1
 		{
 			//Arrange
 			Guess previousGuess = SomeGuessHolder.GetByGuessed(previousGuessed);
-			FullGuess previousFullGuess = new FullGuess(previousGuess, new GuessResult(exacts, nonExacts));
+			GuessResult guessResultExpected = new GuessResult(exacts, nonExacts);
+
 			var newGuess = SomeGuessHolder.GetByGuessed(newGuessed);
 
 			//Act
-			bool actual = previousFullGuess.IsMatches(newGuess);
-
+			GuessResult guessResultActual = newGuess.GetMatches(previousGuess);
+			bool actual = guessResultExpected == guessResultActual;
 			//Assert
 			Assert.AreEqual(expected, actual);
 		}

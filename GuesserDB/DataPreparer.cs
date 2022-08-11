@@ -28,24 +28,15 @@ namespace GuesserDB
 
 		private async Task<bool[,]> PrepareGuessMatches(ConsoleWriter writer, FullGuess[] fullGuesses, Guess[] guesses)
 		{
-			//GuessMatches[] guessMatches = new GuessMatches[fullGuesses.Length * guesses.Length];
 			bool[,] boolyResults = new bool[fullGuesses.Length, guesses.Length];
-			Parallel.ForEach(fullGuesses, fullGuess => 
+			Parallel.ForEach(fullGuesses, fullGuess =>
 			{
+				GuessResult guessResultExpected = fullGuess.GetGuessResult();
 				foreach (Guess guess in guesses)
 				{
-					GuessResult guessResultExpected = fullGuess.GetGuessResult();
-
 					GuessResult guessResultActual = guess.GetMatches(fullGuess.GetGuess());
 					if (guessResultExpected == guessResultActual)
 						boolyResults[fullGuess.Id, guess.Id] = true;
-					/*guessMatches[index] = new GuessMatches
-					{
-						//Id = index,
-						FullGuessId = fullGuess.Id,
-						GuessId = guess.Id
-					};
-				index++;*/
 				}
 			});
 
