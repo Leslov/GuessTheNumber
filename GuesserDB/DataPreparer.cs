@@ -30,7 +30,7 @@ namespace GuesserDB
 		{
 			//GuessMatches[] guessMatches = new GuessMatches[fullGuesses.Length * guesses.Length];
 			bool[,] boolyResults = new bool[fullGuesses.Length, guesses.Length];
-			var tasks = fullGuesses.Select(async fullGuess =>
+			Parallel.ForEach(fullGuesses, fullGuess => 
 			{
 				foreach (Guess guess in guesses)
 				{
@@ -48,7 +48,6 @@ namespace GuesserDB
 				index++;*/
 				}
 			});
-			await Task.WhenAll(tasks);
 
 			db.GuessMatches = boolyResults;
 			return boolyResults;

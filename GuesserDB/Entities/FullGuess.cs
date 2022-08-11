@@ -25,7 +25,7 @@ public class FullGuess
 	public ushort Id { get; }
 	public Guess GetGuess() => SomeGuessHolder.GetGuessById(GuessId);
 	public GuessResult GetGuessResult() => guessResult;//SomeGuessResultHolder.GetGuessResultById(guessResultId);
-	public bool IsMatchesSlow(Guess answer)//TODO: Мейби эту хуйню тоже заранее генерить? Можно даже засейвить и потом грузить с файла. Смотрим по производительности
+	public bool IsMatchesSlow(Guess answer)
 	{
 		GuessResult guessResultExpected = GetGuessResult();
 
